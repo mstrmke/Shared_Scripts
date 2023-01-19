@@ -4,7 +4,7 @@
 	 Created on:   	01/19/2023 16:28
 	 Created by:   	Ryan Hogan
 	 Organization: 	Heartland Business Systems
-	 Filename:     	Install-Defender_UninstallAV.ps1
+	 Filename:     	Remove-AV_Install-NewAV.ps1
 	 Version: 0.1.0 - 01/19/2023 - Initial Version
 	===========================================================================
     .DESCRIPTION
