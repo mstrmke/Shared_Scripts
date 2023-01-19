@@ -1,13 +1,11 @@
 <#
     .NOTES
 	===========================================================================
-	 Created on:   	11/24/2022 5:28 PM
+	 Created on:   	01/19/2023 16:28
 	 Created by:   	Ryan Hogan
 	 Organization: 	Heartland Business Systems
 	 Filename:     	Install-Defender_UninstallAV.ps1
-	 Version: 0.1.2 - 12/15/2022 - Adding $LASTEXITCODE to return code to Intune
-              0.1.1 - 11/28/2022 - Putting in if/else statement to search for OS version
-              0.1.0 - 11/24/2022 - Initial Version
+	 Version: 0.1.0 - 01/19/2023 - Initial Version
 	===========================================================================
     .DESCRIPTION
 		This script confoigures BizTalk server for the 3E environment. It does not install or Configure the ESB for Biztalk. 
@@ -17,21 +15,20 @@
 
 $OSType = "$(((gcim Win32_OperatingSystem).Name).split(‘|’)[0])"
 
-#Uninstall Antivirus
-(Get-WmiObject -Class Win32_Product -Filter {Name='<Antivirus name in Add/Remove Programs>'} -ComputerName . ).Uninstall()
-
-#If OS Name is Server 2012 (or R2), Server 2016, or Windows 7, install Defender Agent. 
-#Windows 10/11 and Server 2019/2022 already have the agent embeedded in the system
-If ($OSType.Contains("Server 2016") -or $OSType.Contains("Server 2012") -or $OSType.Contains("7"))
+$Path = "<Path to Antivirus client service executable>"
+If ($Path)
 {
-    msiexec.exe /i "\\<FQDN>\SYSVOL\Scripts\md4ws.msi" /qn
-    start-process "cmd.exe" "/c %PATHTOONBOARDINGSCRIPT%"
-    Write-Output "AV Client unisntalled, Defender Agent was installed and onboarded"
+   #Uninstall Antivirus
+(Get-WmiObject -Class Win32_Product -Filter {Name='<Antivirus name in Add/Remove Programs>'} -ComputerName . ).Uninstall()
 }
 
 Else { 
-    start-process "cmd.exe" "/c <ONBOARDINGSCRIPTFULLPATH>"
-    Write-Output "AV Client unisntalled, Defender Agent not needed for this OS but has been onboarded"
+   start-process "cmd.exe" "/c "<.exe of new AV with any switches>"
+   
+   #If using MSI (Uncomment below and comment the command above)
+   #start-process "msiexec.exe /i "<Path of MSI setup>" /noreboot /qn
+    
+    Write-Output "AV Client already uninstalled, New Antivirus Installed"
 }
 
 Exit $LASTEXITCODE
