@@ -58,3 +58,5 @@ Remove-Item -Path $CurrentPath\ccmcache -Force -Recurse -ErrorAction SilentlyCon
 Remove-Item -Path $CurrentPath\SMSCFG.ini -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue 
+
+$LASTEXITCODE
