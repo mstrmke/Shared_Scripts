@@ -18,6 +18,9 @@ Function UninstallOldAV{
 
 	#Call Full Paths to AV Service executables, ex: C:\SEP\someexecutable.exe
 	$PathToAV = "<Path to Antivirus1 service executable>","<Path to Antivirus2 service executable>"
+	$Antivirus1 = "<Antivirus1 name in Add/Remove Programs>"
+	$Antivirus2 = "<Antivirus2 name in Add/Remove Programs>"
+
 
 
 	foreach ($Path in $PathToAV){
@@ -26,10 +29,10 @@ Function UninstallOldAV{
 		{
    			Try{
 				#Uninstall Antivirus1
-				(Get-WmiObject -Class Win32_Product -Filter {Name='<Antivirus1 name in Add/Remove Programs>'} -ComputerName . ).Uninstall()
+				(Get-WmiObject -Class Win32_Product -Filter {Name='$Antivirus1'} -ComputerName . ).Uninstall()
 			}
 			Catch {
-				(Get-WmiObject -Class Win32_Product -Filter {Name='<Antivirus2 name in Add/Remove Programs>'} -ComputerName . ).Uninstall()
+				(Get-WmiObject -Class Win32_Product -Filter {Name='$Antivirus2'} -ComputerName . ).Uninstall()
 			}	
 		}
 
