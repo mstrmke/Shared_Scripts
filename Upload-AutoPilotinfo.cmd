@@ -6,4 +6,4 @@ powershell -Command "& {Install-Script -name Get-WindowsAutopilotInfo -Force}"  
 powershell -Command "& {set-executionpolicy RemoteSigned}"
 powershell -Command "& {Get-WindowsAutopilotInfo.ps1 -Online -AddToGroup 'Autopilot-Hybrid Azure AD Joined' -Reboot}" -ExecutionPolicy Bypass
 @echo off
-shutdown.exe -r -f -t 15
+shutdown.exe -r -f -t 20
