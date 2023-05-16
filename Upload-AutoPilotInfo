@@ -1,0 +1,6 @@
+PowerShell.exe -ExecutionPolicy Bypass
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Script -name Get-WindowsAutopilotInfo -Force
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+Get-WindowsAutopilotInfo -Online
