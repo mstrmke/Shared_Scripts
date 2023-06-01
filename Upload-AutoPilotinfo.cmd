@@ -1,6 +1,9 @@
+rem version 1.3 - Calling Get-WindowsAutopilotInfo.ps1 from ProgramFiles location
+rem version 1.4 - Adding Powershell restart command
 @echo on
 powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12}" -ExecutionPolicy Bypass
 powershell -Command "& {Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force}" -ExecutionPolicy Bypass
 powershell -Command "& {Install-Script -name Get-WindowsAutopilotInfo -Force}"  -ExecutionPolicy Bypass
 powershell -Command "& {set-executionpolicy RemoteSigned}"
-powershell -Command "& {Get-WindowsAutopilotInfo.ps1 -Online -Reboot}" -ExecutionPolicy Bypass
+powershell.exe -file "C:\Program Files\WindowsPowerShell\Scripts\Get-WindowsAutoPilotInfo.ps1" -Online -Reboot
+powershell -Command "& {Restart-Computer -force}"  -ExecutionPolicy Bypass
