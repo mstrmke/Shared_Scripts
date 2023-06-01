@@ -54,7 +54,7 @@ if (-not $details.CsPartOfDomain)
 }
 
 # Make sure we have connectivity
-$dcInfo = [ADSI]"LDAP://DC=infinitesystemsllc,DC=com"
+$dcInfo = [ADSI]"LDAP://DC=DOMAIN,DC=COM" #FQDN of Domain
 if ($dcInfo.distinguishedName -eq $null)
 {
     Write-Host "No connectivity to the domain."
