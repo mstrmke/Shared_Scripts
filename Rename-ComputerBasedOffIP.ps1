@@ -25,7 +25,6 @@ if ("$env:PROCESSOR_ARCHITEW6432" -ne "ARM64")
     if (Test-Path "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe")
     {
         & "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy bypass -File "$PSCommandPath"
-        Exit $lastexitcode
     }
 }
 
@@ -65,16 +64,20 @@ goodToGo
 
 Function goodToGo
 {
-    If ($details.CsModel -like "*VMWare*")
+    #WMI Command to exclude if a laptop Azure AD grooup "RSD Laptops"
+    If ($details.CsPCSystemType -eq "Mobile")
     {
-        Write-Host "Vmware Serial Numbers are not supported, I will generate a Random PC Name."
+        Write-Host "This is a laptop, I will generate the LT-$SerialNumber PC Name."
         Try {
-            Rename-Computer -NewName "VMWare-$RandomGenerated" -Force
-            Write-host "New PC Name is 'VMWare-$RandomGenerated'" 
+            Rename-Computer -NewName "LT-$SerialNumber" -Force
+            Write-host "New PC Name is 'LT-$SerialNumber'" 
             Return 0
+            Restart-Computer
+            
         }
         Catch {Exit 1603}
     }
+
     ElseIf ($IPAddress -like "10.102.*.*" )
     { 
         Rename-Computer -NewName "AD-$SerialNumber" -Force
@@ -93,12 +96,14 @@ Function goodToGo
         Write-host "New PC Name is 'HHS-$SerialNumber'" 
         Return 0
     }
-    Elseif ($IPAddress -like "10.105.*.*" )
+<#    Removing TECH for imaging Process. 
+        Elseif ($IPAddress -like "10.105.*.*" )
     { 
         Rename-Computer -NewName "TECH-$SerialNumber" -Force
         Write-host "New PC Name is 'TECH-$SerialNumber'" 
         Return 0
     }
+    #>
     Elseif ($IPAddress -like "10.106.*.*" )
     { 
         Rename-Computer -NewName "EW-$SerialNumber" -Force
