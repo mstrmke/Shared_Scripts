@@ -8,7 +8,7 @@
 	 Version: 	1.0 - Initial Version
 	===========================================================================
     .DESCRIPTION
-    This script manually removes a orhpnaed device from InTune. Meaning The Device is alreday removed from InTune. 
+    This script manually removes a orhpnaed ENROLLED device. Meaning The Device is alreday removed from InTune. 
     
 #>
 
