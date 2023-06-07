@@ -1,4 +1,16 @@
-#This script manually removes a orhpnaed device from InTune.
+<#
+    .NOTES
+	===========================================================================
+	 Created on:   	06/07/2023 13:28
+	 Created by:   	Ryan Hogan
+	 Organization: 	Heartland Business Systems
+	 Filename:     	Remove-OrphanedIntuneEnrollment.ps1
+	 Version: 		1.0 - Initial Version
+	===========================================================================
+    .DESCRIPTION
+    This script manually removes a orhpnaed device from InTune. Meaning The Device is alreday removed from InTune. 
+    
+#>
 
 #Copy Enterprise MGMT GUID
 $EnterpriseMGMTGUID = Read-Host "Copy and Enter GUID from Task Scheduler > Library > Microsoft > Windows >  EnterpriseMGMT"
