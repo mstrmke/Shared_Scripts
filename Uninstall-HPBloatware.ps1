@@ -12,3 +12,13 @@ start-process -FilePath "C:\Program Files (x86)\HP\HP Support Framework\Uninstal
 Return $LASTEXITCODE
 }
 Else { Write-Host "HP Support Assistant already uninstalled"; Return 0}
+
+#Removing App AppX Bundles
+$apps = Get-AppxProvisionedPackage -online
+$config.Config.RemoveApps.App | % {
+	$current = $_
+	$apps | ? {$_.DisplayName -eq $current} | % {
+		Write-Host "Removing provisioned app: $current"
+		$_ | Remove-AppxProvisionedPackage -Online | Out-Null
+	}
+}
