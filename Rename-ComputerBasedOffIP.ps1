@@ -362,17 +362,6 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "192.168.2.*" )
-    { 
-        Rename-Computer -NewName "WC-$SerialNumber" -Force
-        Write-host "New PC Name is 'WC-$SerialNumber'" 
-        Write-Host "Initiating a restart in 10 minutes"
-        & shutdown.exe /g /t 600 /f /c "Restarting the computer due to a computer name change.  Please save your work."
-        Stop-Transcript
-    Exit 0
-
-        Return 0
-    }
     Else
     {
         Write-Host "Write-Host The IP address does not match any recorded subnets: $Ipaddress"
