@@ -9,6 +9,7 @@
    Version:         1.0 (Initial Version)
                     1.1 Removed Scheduled Task and putting tagged file in new "mem" folder. 
                     1.2 - moved Restart Command in each subnet
+                    1.3 - Added check in each subnet if the computer already had the needed Prefix, to skip renaming.
   ===========================================================================
   
   .DESCRIPTION
@@ -39,6 +40,7 @@ Start-Transcript -Path "$env:ProgramData\mem\Rename-ComputerBasedOffIP\Rename-Co
 
 # Make sure we are already domain-joined
 $details = Get-ComputerInfo
+$ComputerName = $details.CsName
 
 if (-not $details.CsPartOfDomain)
 {
@@ -78,7 +80,7 @@ Function goodToGo
         Catch {Exit 1603}
     }
 
-    ElseIf ($IPAddress -like "10.102.*.*" )
+    ElseIf (-not $details.CsName.StartsWith("AD") -and $IPAddress -like "10.102.*.*" )
     { 
         Rename-Computer -NewName "AD-$SerialNumber" -Force
         Write-host "New PC Name is 'AD-$SerialNumber'" 
@@ -87,7 +89,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.103.*.*" )
+    Elseif (-not $details.CsName.StartsWith("RHS") -and $IPAddress -like "10.103.*.*" )
     { 
         Rename-Computer -NewName "RHS-$SerialNumber" -Force
         Write-host "New PC Name is 'RHS-$SerialNumber'" 
@@ -96,7 +98,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.104.*.*" )
+    Elseif (-not $details.CsName.StartsWith("HHS") -and $IPAddress -like "10.104.*.*" )
     {    
         Rename-Computer -NewName "HHS-$SerialNumber" -Force
         Write-host "New PC Name is 'HHS-$SerialNumber'" 
@@ -106,7 +108,7 @@ Function goodToGo
         Return 0
     }
 <#    Removing TECH for imaging Process. 
-        Elseif ($IPAddress -like "10.105.*.*" )
+        Elseif (-not $details.CsName.StartsWith("TECH") -and $IPAddress -like "10.105.*.*" )
     { 
         Rename-Computer -NewName "TECH-$SerialNumber" -Force
         Write-host "New PC Name is 'TECH-$SerialNumber'" 
@@ -116,7 +118,7 @@ Function goodToGo
         Return 0
     }
     #>
-    Elseif ($IPAddress -like "10.106.*.*" )
+    Elseif (-not $details.CsName.StartsWith("EW") -and $IPAddress -like "10.106.*.*" )
     { 
         Rename-Computer -NewName "EW-$SerialNumber" -Force
         Write-host "New PC Name is 'EW-$SerialNumber'" 
@@ -125,7 +127,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.107.*.*" )
+    Elseif (-not $details.CsName.StartsWith("GL") -and $IPAddress -like "10.107.*.*" )
     { 
         Rename-Computer -NewName "GL-$SerialNumber" -Force
         Write-host "New PC Name is 'GL-$SerialNumber'" 
@@ -134,7 +136,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.108.*.*" )
+    Elseif (-not $details.CsName.StartsWith("OD") -and $IPAddress -like "10.108.*.*" )
     { 
         Rename-Computer -NewName "OD-$SerialNumber" -Force
         Write-host "New PC Name is 'OD-$SerialNumber'" 
@@ -143,7 +145,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.109.*.*" )
+    Elseif (-not $details.CsName.StartsWith("FT") -and $IPAddress -like "10.109.*.*" )
     { 
         Rename-Computer -NewName "FT-$SerialNumber" -Force
         Write-host "New PC Name is 'FT-$SerialNumber'" 
@@ -152,7 +154,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.110.*.*" )
+    Elseif (-not $details.CsName.StartsWith("BG") -and $IPAddress -like "10.110.*.*" )
     { 
         Rename-Computer -NewName "BG-$SerialNumber" -Force
         Write-host "New PC Name is 'BG-$SerialNumber'" 
@@ -161,7 +163,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.111.*.*" )
+    Elseif (-not $details.CsName.StartsWith("ES") -and $IPAddress -like "10.111.*.*" )
     { 
         Rename-Computer -NewName "ES-$SerialNumber" -Force
         Write-host "New PC Name is 'ES-$SerialNumber'" 
@@ -170,7 +172,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.112.*.*" )
+    Elseif (-not $details.CsName.StartsWith("BV") -and $IPAddress -like "10.112.*.*" )
     { 
         Rename-Computer -NewName "BV-$SerialNumber" -Force
         Write-host "New PC Name is 'BV-$SerialNumber'" 
@@ -179,7 +181,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.113.*.*" )
+    Elseif (-not $details.CsName.StartsWith("JM") -and $IPAddress -like "10.113.*.*" )
     { 
         Rename-Computer -NewName "JM-$SerialNumber" -Force
         Write-host "New PC Name is 'JM-$SerialNumber'" 
@@ -188,7 +190,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.114.*.*" )
+    Elseif (-not $details.CsName.StartsWith("RG") -and $IPAddress -like "10.114.*.*" )
     { 
         Rename-Computer -NewName "RG-$SerialNumber" -Force
         Write-host "New PC Name is 'RG-$SerialNumber'" 
@@ -198,7 +200,7 @@ Function goodToGo
         
         Return 0
     }
-    Elseif ($IPAddress -like "10.115.*.*" )
+    Elseif (-not $details.CsName.StartsWith("RJ") -and $IPAddress -like "10.115.*.*" )
     { 
         Rename-Computer -NewName "RJ-$SerialNumber" -Force
         Write-host "New PC Name is 'RJ-$SerialNumber'" 
@@ -207,7 +209,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.116.*.*" )
+    Elseif (-not $details.CsName.StartsWith("ET") -and $IPAddress -like "10.116.*.*" )
     { 
         Rename-Computer -NewName "ET-$SerialNumber" -Force
         Write-host "New PC Name is 'ET-$SerialNumber'" 
@@ -217,7 +219,7 @@ Function goodToGo
         Return 0
 
     }
-    Elseif ($IPAddress -like "10.117.*.*" )
+    Elseif (-not $details.CsName.StartsWith("OW") -and $IPAddress -like "10.117.*.*" )
     { 
         Rename-Computer -NewName "OW-$SerialNumber" -Force
         Write-host "New PC Name is 'OW-$SerialNumber'" 
@@ -227,7 +229,7 @@ Function goodToGo
         Return 0
 
     }
-    Elseif ($IPAddress -like "10.118.*.*" )
+    Elseif (-not $details.CsName.StartsWith("LW") -and $IPAddress -like "10.118.*.*" )
     { 
         Rename-Computer -NewName "LW-$SerialNumber" -Force
         Write-host "New PC Name is 'LW-$SerialNumber'" 
@@ -236,7 +238,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.119.*.*" )
+    Elseif (-not $details.CsName.StartsWith("RPS3") -and $IPAddress -like "10.119.*.*" )
     { 
         Rename-Computer -NewName "RPS3-$SerialNumber" -Force
         Write-host "New PC Name is 'RPS3-$SerialNumber'" 
@@ -245,7 +247,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.120.*.*" )
+    Elseif (-not $details.CsName.StartsWith("BK") -and $IPAddress -like "10.120.*.*" )
     { 
         Rename-Computer -NewName "BK-$SerialNumber" -Force
         Write-host "New PC Name is 'BK-$SerialNumber'" 
@@ -254,7 +256,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.121.*.*" )
+    Elseif (-not $details.CsName.StartsWith("GH") -and $IPAddress -like "10.121.*.*" )
     {   
         Rename-Computer -NewName "GH-$SerialNumber" -Force
         Write-host "New PC Name is 'GH-$SerialNumber'" 
@@ -263,7 +265,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.122.*.*" )
+    Elseif (-not $details.CsName.StartsWith("NS") -and $IPAddress -like "10.122.*.*" )
     { 
         Rename-Computer -NewName "NS-$SerialNumber" -Force
         Write-host "New PC Name is 'NS-$SerialNumber'" 
@@ -272,16 +274,16 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.123.*.*" )
+    Elseif (-not $details.CsName.StartsWith("WS") -and $IPAddress -like "10.123.*.*" )
     { 
-        Rename-Computer -NewName "AD-$SerialNumber" -Force
+        Rename-Computer -NewName "WS-$SerialNumber" -Force
         Write-host "New PC Name is 'WS-$SerialNumber'" 
         Write-Host "Initiating a restart in 10 minutes"
         & shutdown.exe /g /t 600 /f /c "Restarting the computer due to a computer name change.  Please save your work."
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.124.*.*" )
+    Elseif (-not $details.CsName.StartsWith("PK") -and $IPAddress -like "10.124.*.*" )
     { 
         Rename-Computer -NewName "PK-$SerialNumber" -Force
         Write-host "New PC Name is 'PK-$SerialNumber'" 
@@ -290,7 +292,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.125.*.*" )
+    Elseif (-not $details.CsName.StartsWith("GF") -and $IPAddress -like "10.125.*.*" )
     { 
         Rename-Computer -NewName "GF-$SerialNumber" -Force
         Write-host "New PC Name is 'GF-$SerialNumber'" 
@@ -299,7 +301,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.126.*.*" )
+    Elseif (-not $details.CsName.StartsWith("JD") -and $IPAddress -like "10.126.*.*" )
     { 
         Rename-Computer -NewName "JD-$SerialNumber" -Force
         Write-host "New PC Name is 'JD-$SerialNumber'" 
@@ -308,7 +310,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.127.*.*" )
+    Elseif (-not $details.CsName.StartsWith("NT") -and $IPAddress -like "10.127.*.*" )
     { 
         Rename-Computer -NewName "NT-$SerialNumber" -Force
         Write-host "New PC Name is 'NT-$SerialNumber'" 
@@ -317,7 +319,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.128.*.*" )
+    Elseif (-not $details.CsName.StartsWith("CR") -and $IPAddress -like "10.128.*.*" )
     { 
         Rename-Computer -NewName "CR-$SerialNumber" -Force
         Write-host "New PC Name is 'CR-$SerialNumber'" 
@@ -326,7 +328,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.129.*.*" )
+    Elseif (-not $details.CsName.StartsWith("RPS2") -and $IPAddress -like "10.129.*.*" )
     { 
         Rename-Computer -NewName "RPS2-$SerialNumber" -Force
         Write-host "New PC Name is 'RPS2-$SerialNumber'" 
@@ -335,7 +337,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.130.*.*" )
+    Elseif (-not $details.CsName.StartsWith("FV") -and $IPAddress -like "10.130.*.*" )
     { 
         Rename-Computer -NewName "FV-$SerialNumber" -Force
         Write-host "New PC Name is 'FV-$SerialNumber'"
@@ -344,7 +346,7 @@ Function goodToGo
         Stop-Transcript
         Return 0 
     }
-    Elseif ($IPAddress -like "10.131.*.*" )
+    Elseif (-not $details.CsName.StartsWith("REAP") -and $IPAddress -like "10.131.*.*" )
     { 
         Rename-Computer -NewName "REAP-$SerialNumber" -Force
         Write-host "New PC Name is 'REAP-$SerialNumber'" 
@@ -353,7 +355,7 @@ Function goodToGo
         Stop-Transcript
         Return 0
     }
-    Elseif ($IPAddress -like "10.133.*.*" )
+    Elseif (-not $details.CsName.StartsWith("WC") -and $IPAddress -like "10.133.*.*" )
     { 
         Rename-Computer -NewName "WC-$SerialNumber" -Force
         Write-host "New PC Name is 'WC-$SerialNumber'" 
