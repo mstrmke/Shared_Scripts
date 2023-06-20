@@ -7,6 +7,7 @@
    Organization: 	Heartland Business Systems
    Filename:     	Rename-ComputerBasedOffIP.ps1
    Version:         1.0 (Initial Version)
+                    1.1 Removed Scheduled Task and putting tagged file in new "mem" folder. 
   ===========================================================================
   
   .DESCRIPTION
@@ -19,29 +20,21 @@ Param()
 Function Precheck
 {
 
-# If we are running as a 32-bit process on an x64 system, re-launch as a 64-bit process
-if ("$env:PROCESSOR_ARCHITEW6432" -ne "ARM64")
+# Create a tag file just so Intune knows this was installed
+if (-not (Test-Path "$($env:ProgramData)\mem\Rename-ComputerBasedOffIP"))
 {
-    if (Test-Path "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe")
-    {
-        & "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy bypass -File "$PSCommandPath"
-    }
+    Mkdir "$($env:ProgramData)\mem\Rename-ComputerBasedOffIP"
 }
 
-# Create a tag file just so Intune knows this was installed
-if (-not (Test-Path "$($env:ProgramData)\Microsoft\Rename-ComputerBasedOffIP"))
-{
-    Mkdir "$($env:ProgramData)\Microsoft\Rename-ComputerBasedOffIP"
-}
-Set-Content -Path "$($env:ProgramData)\Microsoft\Rename-ComputerBasedOffIP\Rename-ComputerBasedOffIP.ps1.tag" -Value "Installed"
+Set-Content -Path "$($env:ProgramData)\mem\Rename-ComputerBasedOffIP\Rename-ComputerBasedOffIP.ps1.tag" -Value "Renamed"
 
 # Initialization
-$dest = "$($env:ProgramData)\Microsoft\Rename-ComputerBasedOffIP"
+$dest = "$($env:ProgramData)\mem\Rename-ComputerBasedOffIP"
 if (-not (Test-Path $dest))
 {
     mkdir $dest
 }
-Start-Transcript "$dest\Rename-ComputerBasedOffIP.log" -Append
+Start-Transcript -Path "$env:ProgramData)\mem\Rename-ComputerBasedOffIP_$ReanmeDate.log" -Append
 
 # Make sure we are already domain-joined
 $details = Get-ComputerInfo
@@ -53,14 +46,13 @@ if (-not $details.CsPartOfDomain)
 }
 
 # Make sure we have connectivity
-$dcInfo = [ADSI]"LDAP://DC=DOMAIN,DC=COM" #FQDN of Domain
-if ($dcInfo.distinguishedName -eq $null)
-{
+if (!(Test-ComputerSecureChannel)) {
+
     Write-Host "No connectivity to the domain."
     Exit 1603
 }
 goodToGo
-} 
+}
 
 Function goodToGo
 {
@@ -293,37 +285,6 @@ Function goodToGo
         Exit 0
     }
 }
-else
-{
-    # Check to see if already scheduled
-    $existingTask = Get-ScheduledTask -TaskName "Rename-ComputerBasedOffIP" -ErrorAction SilentlyContinue
-    if ($existingTask -ne $null)
-    {
-        Write-Host "Scheduled task already exists."
-        Stop-Transcript
-        Exit 0
-    }
-
-    # Copy myself to a safe place if not already there
-    if (-not (Test-Path "$dest\Rename-ComputerBasedOffIP.ps1"))
-    {
-        Copy-Item $PSCommandPath "$dest\Rename-ComputerBasedOffIP.PS1"
-    }
-
-    # Create the scheduled task action
-    $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-NoProfile -ExecutionPolicy bypass -WindowStyle Hidden -File $dest\Rename-ComputerBasedOffIP.ps1"
-
-    # Create the scheduled task trigger
-    $timespan = New-Timespan -minutes 5
-    $triggers = @()
-    $triggers += New-ScheduledTaskTrigger -Daily -At 9am
-    $triggers += New-ScheduledTaskTrigger -AtLogOn -RandomDelay $timespan
-    $triggers += New-ScheduledTaskTrigger -AtStartup -RandomDelay $timespan
-    
-    # Register the scheduled task
-    Register-ScheduledTask -User SYSTEM -Action $action -Trigger $triggers -TaskName "Rename-ComputerBasedOffIP" -Description "Rename-ComputerBasedOffIP" -Force
-    Write-Host "Scheduled task created."
-}
 
 Function CheckRebootStatus{
 $pendingRebootTest = @(
@@ -348,7 +309,8 @@ if ($pendingRebootTest.TestType -eq 'ValueExists' -and $result) {
 }
 $SerialNumber = (Get-WmiObject -class win32_bios).SerialNumber
 $IPAddress = (Get-WmiObject Win32_NetworkAdapterConfiguration | Where { $_.IPAddress } | Select -Expand IPAddress | Where { $_ -like '*.*.*.*' })
-$RandomGenerated = (-join (48..57 + 65..90 + 97..122 | Get-Random -Count 8 | % {[char]$_}))
 
+$RenameDate = Get-Date -format yyyy-MM-ddTHH-mm
+Start-Transcript 
 CheckRebootStatus
 Stop-Transcript
