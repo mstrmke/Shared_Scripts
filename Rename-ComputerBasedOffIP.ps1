@@ -57,14 +57,14 @@ goodToGo
 
 Function goodToGo
 {
-    #WMI Command to exclude if a laptop Azure AD grooup "RSD Laptops"
-         # Make sure we reboot if still in ESP/OOBE by reporting a 1641 return code (hard reboot)
+    # Make sure we reboot if still in ESP/OOBE by reporting a 1641 return code (hard reboot)
     if ($LoggedOnUser -match "defaultUser")
     {
         Write-Host "Exiting during ESP/OOBE with return code 1641"
         Stop-Transcript
         Exit 1641
     }
+    #WMI Command to exclude if a laptop Azure AD grooup "RSD Laptops"
     ElseIf ($details.CsPCSystemType -eq "Mobile")
     {
         Write-Host "This is a laptop, I will generate the LT-$SerialNumber PC Name."
