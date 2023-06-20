@@ -408,4 +408,3 @@ $LoggedOnUser=[System.Security.Principal.WindowsIdentity]::GetCurrent()
 $RenameDate = Get-Date -format yyyy-MM-ddTHH-mm
 Start-Transcript 
 CheckRebootStatus
-
