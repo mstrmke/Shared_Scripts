@@ -23,7 +23,7 @@ if (Test-Path $CCMpath) {
     }
     catch{}
  }
- else {Exit 0}
+ else {Return 0}
 
    
 # Remove WMI Namespaces
