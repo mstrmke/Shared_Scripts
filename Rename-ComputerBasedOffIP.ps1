@@ -38,19 +38,19 @@ $details = Get-ComputerInfo
 if (-not $details.CsPartOfDomain)
 {
     Write-Host "Not part of a domain."
-    Exit 1603
+    Exit 1404 # Add this Return Code ce number in InTune program setup.
 }
 
 # Make sure we have connectivity
 if (!(Test-ComputerSecureChannel)) {
 
     Write-Host "No connectivity to the domain."
-    Exit 1603
+    Exit 1405 # Add this Return Code number in InTune program setup.
 }
 
 If (!($AssetTagNumber)){
     Write-Host "No Asset Tag Found, exiting script."
-    Exit 1603
+    Exit 1406 # Add this Return Code number in InTune program setup.
 }
 
 goodToGo
