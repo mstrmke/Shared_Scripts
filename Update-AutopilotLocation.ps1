@@ -6,7 +6,6 @@
    Organization: 	Heartland Business Systems
    Filename:     	Update-AutopilotLocation.ps1
    Version:         1.0 (Initial Version)
-					1.1 - Remove AppX Bundle removal as it is not related. 
   ===========================================================================
   
   .DESCRIPTION
