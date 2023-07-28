@@ -5,4 +5,4 @@ powershell -Command "& {Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 
 powershell -Command "& {Install-Script -name Get-WindowsAutopilotInfo -Force}"  -ExecutionPolicy Bypass
 powershell -Command "& {set-executionpolicy RemoteSigned}"
 
-powershell.exe -file "C:\Program Files\WindowsPowerShell\Scripts\Get-WindowsAutoPilotInfo.ps1" -Online -AddToGroup "GROUPNAME" -Assign
+powershell.exe -file "C:\Program Files\WindowsPowerShell\Scripts\Get-WindowsAutoPilotInfo.ps1" -Online -AddToGroup "Intune - Autopilot HAADJ" -Assign
