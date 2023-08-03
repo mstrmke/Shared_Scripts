@@ -1,7 +1,7 @@
 <#
 .Synopsis
-Created on:   31/12/2021
-Created by:   Ben Whitmore
+Created on:   08-03-2023
+Created by:   Ryan Hogan
 Filename:     Install-Printer.ps1
 
 Simple script to install a network printer from an INF file. The INF and required CAB files hould be in the same directory as the script if creating a Win32app
