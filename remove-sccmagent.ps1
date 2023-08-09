@@ -1,7 +1,9 @@
 
 # Run SSCM remove
-# Stop Services if exist or started
-$ServiceNames = "CcmExec","smstsmgr","CmRcService"
+
+Function Remove-SCCM {
+    # Stop Services if exist or started
+    $ServiceNames = "CcmExec","smstsmgr","CmRcService"
 
 Foreach ($service in $ServiceNames){
     if ($service.Status -eq 'Running'){
@@ -59,4 +61,15 @@ Remove-Item -Path $CurrentPath\SMSCFG.ini -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue 
 
-$LASTEXITCODE
+RemovalCheck
+}
+
+function RemovalCheck {
+    
+if (Test-Path $CCMpath) {
+    Return 1603
+}
+ else { Return 0 }
+}
+
+Remove-SCCM
