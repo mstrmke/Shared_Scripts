@@ -1,9 +1,9 @@
 $BLV = Get-BitLockerVolume -MountPoint "$env:SystemDrive"
 
 Try{
-BackupToAAD-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $BLV.KeyProtector[1].KeyProtectorId
-Exit 0
+BackupToAAD-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $BLV.KeyProtector[1].KeyProtectorId -ErrorAction SilentlyContinue
+Return 0 
 }
-Catch { Write-Host "Error uploading key to Azure AD: $_.Exception.Message"
-Exit $LASTEXITCODE 
+Catch { Write-Host "Error uploading key to Azure AD: $_"
+Return 1603
 }
