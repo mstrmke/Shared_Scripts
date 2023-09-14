@@ -100,7 +100,7 @@ if ($pendingRebootTest.TestType -eq 'ValueExists' -and $result) {
         DomainCheck
     }
 }
-$AssetTagNumber = (Get-WmiObject Get-WmiObject win32_bios | select Serialnumber)
+$AssetTagNumber = Get-WmiObject win32_bios | select Serialnumber
 
 CheckRebootStatus
 Stop-Transcript
