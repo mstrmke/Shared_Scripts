@@ -1,17 +1,16 @@
 ﻿
 <#	
-  .NOTES
-  ===========================================================================
-   Created on:   	10/02/2022
-   Created by:   	Ryan Hogan
-   Organization: 	Heartland Business Systems
-   Filename:     	Rename-ADComputer.ps1
-   Version:         2.2 Exit if Chassis Type is unknown
-  ===========================================================================
+    .NOTES
+    ===========================================================================
+    Created on:   	10/02/2022
+    Created by:   	Ryan Hogan
+    Organization: 	Heartland Business Systems
+    Filename:     	Rename-ADComputer.ps1
+    Version:        3.0 - Added GUI for Renaming function.. 
+    ===========================================================================
   
-  .DESCRIPTION
+    .DESCRIPTION
     This script uses an AD User's name (typed in) and renames a computer to the requested Prefix followed by that username. 
- 
 
 #>
 
@@ -53,7 +52,8 @@ if (-not $details.CsPartOfDomain)
 }
 
 # Make sure we have connectivity
-$dcInfo = [ADSI]"LDAP://DC=HBS,DC=NET" #FQDN of Domain
+$ComputerDN = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\DataStore\Machine\0" -Name "DNName"
+$dcInfo = ComputerDN -replace ".*D" -replace ",.*"
 if ($dcInfo.distinguishedName -eq $null)
 {
     Write-Host "No connectivity to the domain."
@@ -83,12 +83,21 @@ Function goodToGo
         $DesktopMachineName = "D$AssetTagNumber"
         Try {
             Rename-Computer -NewName "$DesktopMachineName" -Force -Confirm:$false
-            Write-host "New PC Name is $DesktopMachineName; please reboot to complete process." 
+            $msgBody = 'New PC Name is '+$DesktopMachineName+'; please reboot to complete process.'
+            $msgButton = 'OK'
+            $msgTitle = 'Reboot-ADComputer'
+            $msgImage = 'Warning'
+            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
+
             Return 0
          }
          Catch
         {
-            Write-Host "Unable to rename computer, please reboot and try again."
+            $msgBody = 'Renaming device failed, please reboot and try again.'
+            $msgButton = 'OK'
+            $msgTitle = 'Reboot-ADComputer'
+            $msgImage = 'Warning'
+            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
             Return 1603
         }
     }
@@ -116,6 +125,8 @@ if ($pendingRebootTest.TestType -eq 'ValueExists' -and $result) {
     }
 }
 
+# Load parameters for creating the message prompt
+Add-Type -AssemblyName PresentationCore, PresentationFramework
 $AssetTagNumber = (Get-WmiObject -class win32_bios).Serialnumber
 $ChassisType = (Get-WmiObject -class Win32_SystemEnclosure).chassistypes
 If ($ChassisType -eq 0){
