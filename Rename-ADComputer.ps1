@@ -6,8 +6,9 @@
     Created by:   	Ryan Hogan
     Organization: 	Heartland Business Systems
     Filename:     	Rename-ADComputer.ps1
-    Version:        3.3 Changed Images in GUI pop-ups. 
-                    -Updated Error checking if the device is trying to rename to the name it already is.  
+    Version:        3.4 More Error Checking added
+                    -Updated Error checking if the device is trying to rename to the name it already is.
+                    -Added ErrorAction Stop if the domain rename fails, so it enters the catch block.  
     ===========================================================================
   
     .DESCRIPTION
