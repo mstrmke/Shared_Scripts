@@ -52,8 +52,7 @@ if (-not $details.CsPartOfDomain)
 }
 
 # Make sure we have connectivity
-$ComputerDN = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\DataStore\Machine\0" -Name "DNName"
-$dcInfo = ComputerDN -replace ".*D" -replace ",.*"
+$dcInfo = [ADSI]"LDAP://DC=HBS,DC=NET" #FQDN of Domain
 if ($dcInfo.distinguishedName -eq $null)
 {
     Write-Host "No connectivity to the domain."
