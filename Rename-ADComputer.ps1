@@ -6,7 +6,8 @@
     Created by:   	Ryan Hogan
     Organization: 	Heartland Business Systems
     Filename:     	Rename-ADComputer.ps1
-    Version:        3.1 Added GUI after renaming is completed. 
+    Version:        3.3 Changed Images in GUI pop-ups. 
+                    -Updated Error checking if the device is trying to rename to the name it already is.  
     ===========================================================================
   
     .DESCRIPTION
@@ -63,54 +64,69 @@ goodToGo
 
 Function goodToGo
 {
-    
+    $CurrentComputername = (Get-WmiObject -Class Win32_ComputerSystem).Name
     If ($ChassisType -eq 7 -or $ChassisType -eq 8 -or $ChassisType -eq 9 -or $ChassisType -eq 10 -or $ChassisType -eq 14 -or $ChassisType -eq 15){
-            $LaptopMachineName = "L$AssetTagNumber"
-            
-        Try {
-            Rename-Computer -NewName "$LaptopMachineName" -Force -Confirm:$false
-            $msgBody = 'New PC Name is '+$LaptopMachineName+'; please reboot to complete process.'
-            $msgButton = 'OK'
-            $msgTitle = 'Reboot-ADComputer'
-            $msgImage = 'Warning'
-            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
-            Return 0
-         }
-         Catch
+        If ($CurrentComputername -eq "L$AssetTagNumber")
         {
-            $msgBody = 'Renaming device failed, please reboot and try again.'
+            $msgBody = 'Device name is already set to '+$LaptopMachineName+', Nothing to do.'
             $msgButton = 'OK'
-            $msgTitle = 'Reboot-ADComputer'
-            $msgImage = 'Warning'
+            $msgTitle = 'Rename-ADComputer'
+            $msgImage = 'Asterisk'
             $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
-            Return 1603
+            Exit 1603
+        }
+        else {
+            Try {
+                Rename-Computer -NewName "$LaptopMachineName" -Force -Confirm:$false -erroraction Stop
+                $msgBody = 'New PC Name is '+$LaptopMachineName+'; please reboot to complete process.'
+                $msgButton = 'OK'
+                $msgTitle = 'Rename-ADComputer'
+                $msgImage = 'Asterisk'
+                $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
+                Exit 0
+            }
+            Catch{       
+                Write-Host "Error: $_.ErrorDetails.Message"
+                $msgBody = 'Renaming device failed, please reboot and try again.'
+                $msgButton = 'OK'
+                $msgTitle = 'Rename-ADComputer'
+                $msgImage = 'Stop'
+                $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
+                Exit 1603
+            }
         }
     }
     Elseif ($ChassisType -eq 2 -or $ChassisType -eq 3 -or $ChassisType -eq 4 -or $ChassisType -eq 5 -or $ChassisType -eq 6){
-        $DesktopMachineName = "D$AssetTagNumber"
-        Try {
-            Rename-Computer -NewName "$DesktopMachineName" -Force -Confirm:$false
-            $msgBody = 'New PC Name is '+$DesktopMachineName+'; please reboot to complete process.'
-            $msgButton = 'OK'
-            $msgTitle = 'Reboot-ADComputer'
-            $msgImage = 'Warning'
-            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
-
-            Return 0
-         }
-         Catch
-        {
-            $msgBody = 'Renaming device failed, please reboot and try again.'
-            $msgButton = 'OK'
-            $msgTitle = 'Reboot-ADComputer'
-            $msgImage = 'Warning'
-            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
-            Return 1603
+        If ($CurrentComputername = "D$AssetTagNumber"){
+                $msgBody = 'Device name is already set to '+$DesktopMachineName+', Nothing to do.'
+                $msgButton = 'OK'
+                $msgTitle = 'Rename-ADComputer'
+                $msgImage = 'Asterisk'
+                $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
+                Exit 1603
+        }
+        else {
+            Try {
+                Rename-Computer -NewName "$DesktopMachineName" -Force -Confirm:$false -erroraction Stop
+                $msgBody = 'New PC Name is '+$DesktopMachineName+'; please reboot to complete process.'
+                $msgButton = 'OK'
+                $msgTitle = 'Rename-ADComputer'
+                $msgImage = 'Asterisk'
+                $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
+                Exit 0
+            }
+            Catch {       
+                Write-Host "Error: $_.ErrorDetails.Message"
+                $msgBody = 'Renaming device failed, please reboot and try again.'
+                $msgButton = 'OK'
+                $msgTitle = 'Rename-ADComputer'
+                $msgImage = 'Stop'
+                $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
+                Exit 1603
+            }
         }
     }
-       
 }
-
 Function CheckRebootStatus{
 $pendingRebootTest = @(
     @{
@@ -135,12 +151,14 @@ if ($pendingRebootTest.TestType -eq 'ValueExists' -and $result) {
 # Load parameters for creating the message prompt
 Add-Type -AssemblyName PresentationCore, PresentationFramework
 $AssetTagNumber = (Get-WmiObject -class win32_bios).Serialnumber
+$LaptopMachineName = "L$AssetTagNumber"
+$DesktopMachineName = "D$AssetTagNumber"
+
 $ChassisType = (Get-WmiObject -class Win32_SystemEnclosure).chassistypes
 If ($ChassisType -eq 0){
     Write-out "Chassis Type is unknown, Exiting"
     Exit 1603
 }   
+
 Else {CheckRebootStatus}
-
-
 Stop-Transcript
