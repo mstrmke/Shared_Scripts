@@ -6,7 +6,7 @@
    Created by:   	Ryan Hogan
    Organization: 	Heartland Business Systems
    Filename:     	Rename-ADComputer.ps1
-   Version:         2.2 Exit if Chassis Type is unkown
+   Version:         2.2 Exit if Chassis Type is unknown
   ===========================================================================
   
   .DESCRIPTION
