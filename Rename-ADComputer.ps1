@@ -6,7 +6,7 @@
    Created by:   	Ryan Hogan
    Organization: 	Heartland Business Systems
    Filename:     	Rename-ADComputer.ps1
-   Version:         2.1 Added ChassisType for determining Latop or Desktop
+   Version:         2.2 Exit if Chassis Type is unkown
   ===========================================================================
   
   .DESCRIPTION
@@ -41,7 +41,7 @@ if (-not (Test-Path $dest))
 {
     mkdir $dest
 }
-Start-Transcript "$dest\Rename-ADComputer.log" -Append
+Start-Transcript "$dest\Rename-ADComputer.log"
 
 # Make sure we are already domain-joined
 $details = Get-ComputerInfo
@@ -118,7 +118,11 @@ if ($pendingRebootTest.TestType -eq 'ValueExists' -and $result) {
 
 $AssetTagNumber = (Get-WmiObject -class win32_bios).Serialnumber
 $ChassisType = (Get-WmiObject -class Win32_SystemEnclosure).chassistypes
+If ($ChassisType -eq 0){
+    Write-out "Chassis Type is unknown, Exiting"
+    Exit 1603
+}   
+Else {CheckRebootStatus}
 
 
-CheckRebootStatus
 Stop-Transcript
