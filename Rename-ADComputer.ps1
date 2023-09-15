@@ -6,7 +6,7 @@
     Created by:   	Ryan Hogan
     Organization: 	Heartland Business Systems
     Filename:     	Rename-ADComputer.ps1
-    Version:        3.0 - Added GUI for Renaming function.. 
+    Version:        3.1 Added GUI after renaming is completed. 
     ===========================================================================
   
     .DESCRIPTION
@@ -52,7 +52,8 @@ if (-not $details.CsPartOfDomain)
 }
 
 # Make sure we have connectivity
-$dcInfo = [ADSI]"LDAP://DC=HBS,DC=NET" #FQDN of Domain
+$ComputerDN = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\DataStore\Machine\0" -Name "DNName"
+$dcInfo = ComputerDN -replace ".*D" -replace ",.*"
 if ($dcInfo.distinguishedName -eq $null)
 {
     Write-Host "No connectivity to the domain."
@@ -69,12 +70,20 @@ Function goodToGo
             
         Try {
             Rename-Computer -NewName "$LaptopMachineName" -Force -Confirm:$false
-            Write-host "New PC Name is $LaptopMachineName; please reboot to complete process." 
+            $msgBody = 'New PC Name is '+$LaptopMachineName+'; please reboot to complete process.'
+            $msgButton = 'OK'
+            $msgTitle = 'Reboot-ADComputer'
+            $msgImage = 'Warning'
+            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
             Return 0
          }
          Catch
         {
-            Write-Host "Unable to rename computer, please reboot and try again."
+            $msgBody = 'Renaming device failed, please reboot and try again.'
+            $msgButton = 'OK'
+            $msgTitle = 'Reboot-ADComputer'
+            $msgImage = 'Warning'
+            $Result = [System.Windows.MessageBox]::Show($msgBody, $msgTitle, $msgButton, $msgImage)
             Return 1603
         }
     }
