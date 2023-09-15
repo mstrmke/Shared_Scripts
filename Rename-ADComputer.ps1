@@ -6,7 +6,7 @@
    Created by:   	Ryan Hogan
    Organization: 	Heartland Business Systems
    Filename:     	Rename-ADComputer.ps1
-   Version:         2.0 Added Functions for easy reading
+   Version:         2.1 Added ChassisType for determining Latop or Desktop
   ===========================================================================
   
   .DESCRIPTION
@@ -65,19 +65,34 @@ goodToGo
 Function goodToGo
 {
     
-    Try
-    { 
-        Rename-Computer -NewName "L$AssetTagNumber" -Force -Confirm:$false
-        Write-host "New PC Name is 'L$AssetTagNumber;, pelase reboot to complete process." 
-        Return 0
+    If ($ChassisType -eq 7 -or $ChassisType -eq 8 -or $ChassisType -eq 9 -or $ChassisType -eq 10 -or $ChassisType -eq 14 -or $ChassisType -eq 15){
+            $LaptopMachineName = "L$AssetTagNumber"
+            
+        Try {
+            Rename-Computer -NewName "$LaptopMachineName" -Force -Confirm:$false
+            Write-host "New PC Name is $LaptopMachineName; please reboot to complete process." 
+            Return 0
+         }
+         Catch
+        {
+            Write-Host "Unable to rename computer, please reboot and try again."
+            Return 1603
+        }
     }
-    Catch
-    {
-        Write-Host "Unable to rename computer, please reboot and try again."
-        Return 1603
+    Elseif ($ChassisType -eq 2 -or $ChassisType -eq 3 -or $ChassisType -eq 4 -or $ChassisType -eq 5 -or $ChassisType -eq 6){
+        $DesktopMachineName = "D$AssetTagNumber"
+        Try {
+            Rename-Computer -NewName "$DesktopMachineName" -Force -Confirm:$false
+            Write-host "New PC Name is $DesktopMachineName; please reboot to complete process." 
+            Return 0
+         }
+         Catch
+        {
+            Write-Host "Unable to rename computer, please reboot and try again."
+            Return 1603
+        }
     }
-
-
+       
 }
 
 Function CheckRebootStatus{
@@ -100,7 +115,10 @@ if ($pendingRebootTest.TestType -eq 'ValueExists' -and $result) {
         DomainCheck
     }
 }
-$AssetTagNumber = Get-WmiObject win32_bios | select Serialnumber
+
+$AssetTagNumber = (Get-WmiObject -class win32_bios).Serialnumber
+$ChassisType = (Get-WmiObject -class Win32_SystemEnclosure).chassistypes
+
 
 CheckRebootStatus
 Stop-Transcript
