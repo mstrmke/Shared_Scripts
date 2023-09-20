@@ -23,9 +23,13 @@ if (Test-Path $CCMpath) {
     try{
         $CCMProcess.WaitForExit()
     }
-    catch{}
+    catch{ Write-Host "SCCM uninstall failed, remove manually"
+        Return 1603
+    }
  }
- else {}
+ else { Write-Host "SCCM does not exist, continuing to Removal Check"
+    RemovalCheck
+    }
 
    
 # Remove WMI Namespaces
@@ -64,7 +68,7 @@ Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue
 RemovalCheck
 }
 
-function RemovalCheck {
+Function RemovalCheck {
     
 if (Test-Path $CCMpath) {
     Return 1603
