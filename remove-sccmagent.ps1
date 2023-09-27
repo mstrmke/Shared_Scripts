@@ -22,16 +22,19 @@ if (Test-Path $CCMpath) {
     $CCMProcess = Get-Process ccmsetup -ErrorAction SilentlyContinue
     try{
         $CCMProcess.WaitForExit()
+        Remove-SCCMManually
     }
     catch{ Write-Host "SCCM uninstall failed, remove manually"
-        Return 1603
+        Remove-SCCMManually
     }
  }
+    RemovalCheck
  else { Write-Host "SCCM does not exist, continuing to Removal Check"
     RemovalCheck
     }
-
-   
+}
+Funtion Remove-SCCMManually
+{
 # Remove WMI Namespaces
 Get-WmiObject -Query "SELECT * FROM __Namespace WHERE Name='ccm'" -Namespace root | Remove-WmiObject
 Get-WmiObject -Query "SELECT * FROM __Namespace WHERE Name='sms'" -Namespace root\cimv2 | Remove-WmiObject
@@ -65,7 +68,6 @@ Remove-Item -Path $CurrentPath\SMSCFG.ini -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $CurrentPath\SMS*.mif -Force -ErrorAction SilentlyContinue 
 
-RemovalCheck
 }
 
 Function RemovalCheck {
