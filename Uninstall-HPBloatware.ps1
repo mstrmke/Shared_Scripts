@@ -1,9 +1,12 @@
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security'} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security - Console'} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security Application Support for Sure Sense'} -ComputerName . ).Uninstall() 
+(Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security Application Support for Chrome'} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Notifications'} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Security Update Service'} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name='HP System Default Settings'} -ComputerName . ).Uninstall() 
+(Get-WmiObject -Class Win32_Product -Filter {Name='HP System Default Settings'} -ComputerName . ).Uninstall()
+(Get-WmiObject -Class Win32_Product -Filter {Name='ICS'} -ComputerName . ).Uninstall() 
+(Get-WmiObject -Class Win32_Product -Filter {Name='HP Sure Run Module'} -ComputerName . ).Uninstall() 
 
 $HPSupportAssistant = Test-Path -Path "C:\Program Files (x86)\HP\HP Support Framework\UninstallHPSA.exe" 
 if ($HPSupportAssistant -eq $True)
