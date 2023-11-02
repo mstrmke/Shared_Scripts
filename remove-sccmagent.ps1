@@ -1,4 +1,18 @@
+<#	
+    .NOTES
+    ===========================================================================
+    Created on:   	10/02/2022
+    Created by:   	Ryan Hogan
+    Organization: 	Heartland Business Systems
+    Filename:     	remove-sccmagent.ps1
+    Version:        1.4 More Error Checking added by way of Functions
+                     
+    ===========================================================================
+  
+    .DESCRIPTION
+    Thhis script uninstalls the SCCM Agent on a Windfows 10 or later device. 
 
+#>
 # Run SSCM remove
 
 Function Remove-SCCM {
