@@ -33,7 +33,7 @@ if (Test-Path $CCMpath) {
     RemovalCheck
     }
 }
-Funtion Remove-SCCMManually
+Function Remove-SCCMManually
 {
 # Remove WMI Namespaces
 Get-WmiObject -Query "SELECT * FROM __Namespace WHERE Name='ccm'" -Namespace root | Remove-WmiObject
