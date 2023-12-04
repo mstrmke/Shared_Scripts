@@ -17,6 +17,7 @@ $EnterpriseMGMTGUID = Read-Host "Copy and Enter GUID from Task Scheduler > Libra
 #Remove EnterpsieMGMT tasks and GUID folder
 
 try {
+    Start-Process msiexec.exe -ArgumentList "/X{9B193A66-8B8E-4685-813B-A10690C89F4B} /qn" -Wait -ErrorAction SilentlyContinue
     Get-ScheduledTask -TaskPath "\Microsoft\Windows\EnterpriseMgmt\$EnterpriseMGMTGUID\*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction SilentlyContinue
     Remove-Item  -Path "$env:windir\System32\Tasks\Microsoft\Windows\EnterpriseMGMT\$EnterpriseMGMTGUID" -Recurse -Force -Confirm:$false -ErrorAction SilentlyContinue
     Remove-Item "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\EnterpriseMgmt\$EnterpriseMGMTGUID" -Force -Confirm:$false
