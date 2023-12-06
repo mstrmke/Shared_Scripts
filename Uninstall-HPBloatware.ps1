@@ -1,3 +1,17 @@
+<#
+    .NOTES
+	===========================================================================
+	 Created on:   	06/07/2023 13:28
+	 Created by:   	Ryan Hogan
+	 Organization: 	Heartland Business Systems
+	 Filename:     	Uninstall-HPBloatware.ps1
+	 Version: 	1.4 - Added Apx Bundles
+	===========================================================================
+    .DESCRIPTION
+    This script manually removes an HP Bloatware on ENROLLED devices.
+    
+#>
+
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security'} -ComputerName . ).Uninstall() -ErrorAction SilentlyContinue
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security - Console'} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security Application Support for Sure Sense'} -ComputerName . ).Uninstall() -ErrorAction SilentlyContinue
