@@ -4,7 +4,7 @@
 	 Created on:   	06/07/2023 13:28
 	 Created by:   	Ryan Hogan
 	 Organization: 	Heartland Business Systems
-	 Filename:     	Uninstall-HPBloatware.ps1
+	 Filename:     	Uninstall-HPBloatware.
 	 Version: 	1.5 - Added Wilcards to Apx Bundles
 	===========================================================================
     .DESCRIPTION
@@ -12,7 +12,7 @@
     
 #>
 
-(Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security'} -ComputerName . ).Uninstall() -ErrorAction SilentlyContinue
+(Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security'} -ComputerName . ).Uninstall()
 (Get-WmiObject -Class Win32_Product -Filter {Name= -like "HP Wolf Security - Console"} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name -like "HP Wolf Security Application Support for Sure Sense"} -ComputerName . ).Uninstall() 
 (Get-WmiObject -Class Win32_Product -Filter {Name -like "HP Wolf Security Application Support for Chrome"} -ComputerName . ).Uninstall() 
