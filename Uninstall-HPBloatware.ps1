@@ -4,30 +4,27 @@
 	 Created on:   	06/07/2023 13:28
 	 Created by:   	Ryan Hogan
 	 Organization: 	Heartland Business Systems
-	 Filename:     	Uninstall-HPBloatware.
+	 Filename:     	Uninstall-HPBloatware.ps1
 	 Version: 	1.5 - Added Wilcards to Apx Bundles
+	 			1.6 - Replaced Indivdual Apps with HP Win32 Product Uninstall Loop for all HP  Apps
 	===========================================================================
     .DESCRIPTION
     This script manually removes an HP Bloatware on ENROLLED devices.
     
 #>
 
-(Get-WmiObject -Class Win32_Product -Filter {Name='HP Wolf Security'} -ComputerName . ).Uninstall()
-(Get-WmiObject -Class Win32_Product -Filter {Name= -like "HP Wolf Security - Console"} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like "HP Wolf Security Application Support for Sure Sense"} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like "HP Wolf Security Application Support for Chrome"} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like "HP Notifications"} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like 'HP Security Update Service'} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like 'HP System Default Settings'} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like 'ICS'} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like 'HP Sure Run Module'} -ComputerName . ).Uninstall() 
-(Get-WmiObject -Class Win32_Product -Filter {Name -like 'HP Documentation'} -ComputerName . ).Uninstall() 
+#Remove HP Bloatware from Add/Remove Programs
+$HPInstalledApps = Get-WmiObject -Class Win32_Product | Where-Object{$_.Name -like "*HP*"}
 
-
+foreach ($HPInstalledApp in $HPInstalledApps)
+{
+	$HPWin32Product.Uninstall()
+}
 
 #Removing Unneeded HP AppX Bundles
-Get-AppxPackage -Name *myHP* | Remove-AppxPackage
-Get-AppxPackage -Name *QuickDrop* | Remove-AppxPackage
-Get-AppxPackage -Name *hpprivacysettings* | Remove-AppxPackage
-Get-AppxPackage -Name *hpsysteminformation* | Remove-AppxPackage
-Get-AppxPackage -Name *hpeasyclean* | Remove-AppxPackage
+$HPAppxPackages = Get-AppxPackage -Name *HP*
+
+foreach ($HPAppxPackage in $HPAppxPackages)
+{
+	$HPAppxPackage | Remove-AppxPackage
+}
