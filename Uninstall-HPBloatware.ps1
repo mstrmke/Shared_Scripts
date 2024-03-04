@@ -14,17 +14,16 @@
 #>
 
 #Remove HP Bloatware from Add/Remove Programs
-$HPInstalledApps = Get-WmiObject -Class Win32_Product | Where-Object{$_.Name -like "*HP*"}
+# Get a list of all installed applications
 
-foreach ($HPInstalledApp in $HPInstalledApps)
-{
-	$HPWin32Product.Uninstall()
-}
+Get-package -Name "HP Wolf Security"| Uninstall-package -AllVersions -ErrorAcition SilentlyContinue
+Get-package -Name "*HP Wolf Security*"| Uninstall-package -AllVersions -ErrorAcition SilentlyContinue
+Get-package -Name "*HP*"| Uninstall-package -AllVersions -ErrorAcition SilentlyContinue
 
 #Removing Unneeded HP AppX Bundles
 $HPAppxPackages = Get-AppxPackage -Name *HP*
 
 foreach ($HPAppxPackage in $HPAppxPackages)
 {
-	$HPAppxPackage | Remove-AppxPackage
+	$HPAppxPackage | Remove-AppxPackage -ErrorAction SilentlyContinue
 }
