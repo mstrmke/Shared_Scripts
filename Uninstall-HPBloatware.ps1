@@ -16,9 +16,9 @@
 #Remove HP Bloatware from Add/Remove Programs
 # Get a list of all installed applications
 
-Get-package -Name "HP Wolf Security"| Uninstall-package -AllVersions -ErrorAcition SilentlyContinue
-Get-package -Name "*HP Wolf Security*"| Uninstall-package -AllVersions -ErrorAcition SilentlyContinue
-Get-package -Name "*HP*"| Uninstall-package -AllVersions -ErrorAcition SilentlyContinue
+Get-package -Name "HP Wolf Security"| Uninstall-package -AllVersions -ErrorAction SilentlyContinue
+Get-package -Name "*HP Wolf Security*"| Uninstall-package -AllVersions -ErrorAction SilentlyContinue
+Get-package -Name "*HP*"| Uninstall-package -AllVersions -ErrorAction SilentlyContinue
 
 #Removing Unneeded HP AppX Bundles
 $HPAppxPackages = Get-AppxPackage -Name *HP*
