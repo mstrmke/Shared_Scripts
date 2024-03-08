@@ -18,6 +18,7 @@
 
 Get-package -Name "HP Wolf Security"| Uninstall-package -AllVersions -ErrorAction SilentlyContinue
 Get-package -Name "*HP Wolf Security*"| Uninstall-package -AllVersions -ErrorAction SilentlyContinue
+Start-Process "C:\Program Files (x86)\Hewlett-Packard\HP Support Framework\UninstallHPSA.exe" -ArgumentList "/s /v/qn UninstallKeepPreferences=FALSE"
 Get-package -Name "*HP*"| Uninstall-package -AllVersions -ErrorAction SilentlyContinue
 
 #Removing Unneeded HP AppX Bundles
