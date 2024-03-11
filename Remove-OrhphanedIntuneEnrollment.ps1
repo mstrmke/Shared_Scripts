@@ -5,7 +5,7 @@
 	 Created by:   	Ryan Hogan
 	 Organization: 	Heartland Business Systems
 	 Filename:     	Remove-OrphanedIntuneEnrollment.ps1
-	 Version: 	1.0 - Initial Version
+	 Version: 	1.01 - Adding -ErrorAction SilentlyContinue to Line 23. 
 	===========================================================================
     .DESCRIPTION
     This script manually removes an orhpnaed ENROLLED device; Meaning The Device is missing from InTune. 
@@ -20,7 +20,7 @@ try {
     Start-Process msiexec.exe -ArgumentList "/X{9B193A66-8B8E-4685-813B-A10690C89F4B} /qn" -Wait -ErrorAction SilentlyContinue
     Get-ScheduledTask -TaskPath "\Microsoft\Windows\EnterpriseMgmt\$EnterpriseMGMTGUID\*" | Unregister-ScheduledTask -Confirm:$false -ErrorAction SilentlyContinue
     Remove-Item  -Path "$env:windir\System32\Tasks\Microsoft\Windows\EnterpriseMGMT\$EnterpriseMGMTGUID" -Recurse -Force -Confirm:$false -ErrorAction SilentlyContinue
-    Remove-Item "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\EnterpriseMgmt\$EnterpriseMGMTGUID" -Force -Confirm:$false
+    Remove-Item "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\EnterpriseMgmt\$EnterpriseMGMTGUID" -Force -Confirm:$false -ErrorAction SilentlyContinue
 
 
     #Remove InTune Certificate  
