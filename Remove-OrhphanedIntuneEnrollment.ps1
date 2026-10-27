@@ -8,7 +8,7 @@
 	 Version: 	1.01 - Adding -ErrorAction SilentlyContinue to Line 23. 
 	===========================================================================
     .DESCRIPTION
-    This script manually removes an orhpnaed ENROLLED device; Meaning The Device is missing from InTune. 
+    This script manually removes an orhpnaed ENROLLED device; Meaning The Device is missing from InTune. It is to be run ON THE DEVICE. 
     
 #>
 
